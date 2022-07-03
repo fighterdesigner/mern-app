@@ -53,8 +53,8 @@ const addUser = asyncHandler(async (req, res) => {
 // @access Public
 const loginAuser = asyncHandler(async (req, res) => {
 
-    const { username, password } = req.body
-    const user = await User.findOne({username})
+    const { email, password } = req.body
+    const user = await User.findOne({email})
 
     if(user && (await bcrypt.compare(password, user.password))) {
         res.status(201)
@@ -74,15 +74,9 @@ const loginAuser = asyncHandler(async (req, res) => {
 // @desc get current user
 // @route GET /api/user/current
 // @access Private
-const getCurrentUser = asyncHandler(async (req, res) => {
-    const { _id, username, email } = await User.findById(req.user.id)
-    
+const getCurrentUser = asyncHandler(async (req, res) => {    
     res.status(200)
-    res.json({
-        id: _id,
-        username,
-        email
-    })
+    res.json(req.user)
 })
 
 const generateToken = (id) => {

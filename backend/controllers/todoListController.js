@@ -14,14 +14,14 @@ const getTodoLists = asyncHandler(async (req, res) => {
 // @route POST /api/todolists
 // @access Private
 const postTodoLists = asyncHandler(async (req, res) => {
-
-    if(!req.body.title || !req.body.body || !req.body.done) {
+    
+    if(!req.body.title || !req.body.body) {
         res.status(400)
         throw new Error("Please enter all fields");
     }
-
+    
     const todolist = await TodoList.create({
-        user: req.user.id,
+        user: req.user._id,
         title: req.body.title,
         body: req.body.body,
         done: req.body.done
@@ -43,7 +43,7 @@ const updateTodoLists = asyncHandler(async (req, res) => {
         throw new Error("Todo list not found")
     }
 
-    const user = await User.findById(req.user.id)
+    const user = req.user
 
     if(!user) {
         res.status(404)
@@ -72,7 +72,7 @@ const deleteTodoLists = asyncHandler(async (req, res) => {
         throw new Error("Todo list not found")
     }
 
-    const user = await User.findById(req.user.id)
+    const user = req.user
 
     if(!user) {
         res.status(404)
