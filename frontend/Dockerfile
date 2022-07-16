@@ -1,8 +1,18 @@
-FROM node:14.18.1
+FROM node:14.18.1 as build
 
-RUN rm /usr/share/nginx/html/*
+WORKDIR /app
 
-COPY ./build/* ./usr/share/nginx/html
+COPY package*.json .
+
+RUN npm i
+
+COPY . .
+
+RUN npm run build
+
+FROM nginx
+
+COPY --from=build ./app/build ./usr/share/nginx/html
 
 EXPOSE 80
 

@@ -4,15 +4,22 @@ services:
         build: ./frontend
         ports:
           - "80:80"
-        depends_on:
-          - backend
+        networks:
+          - my_app_network
     backend:
         build: .
         ports:
           - "5000:5000"
         depends_on:
           - database 
+        networks:
+          - my_app_network  
     database:
         image: mongo
         ports:
           - "27017:27017"
+        networks:
+          - my_app_network  
+networks:
+    my_app_network:
+        driver: bridge          
